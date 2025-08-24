@@ -1,5 +1,5 @@
 use std::{fs::File, io::{BufReader, BufWriter}, path::PathBuf};
-use anyhow::{Context, Result};
+use anyhow::{bail, Context, Result};
 use clap::Parser;
 
 #[derive(Parser)]
@@ -10,6 +10,10 @@ struct Cli {
 
 fn main() -> Result<()> {
     let args: Cli = Cli::parse();
+
+    if args.pattern.is_empty() {
+        bail!("Pattern cannot be empty");
+    }
     
     let f: File = File::open(&args.path)
         .with_context(|| format!("could not read file `{}`", args.path.display()))?;
