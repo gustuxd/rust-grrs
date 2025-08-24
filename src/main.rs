@@ -1,4 +1,4 @@
-use std::{fs::File, io::{BufRead, BufReader}, path::PathBuf};
+use std::{fs::File, io::{BufReader, BufWriter}, path::PathBuf};
 use anyhow::{Context, Result};
 use clap::Parser;
 
@@ -10,21 +10,12 @@ struct Cli {
 
 fn main() -> Result<()> {
     let args: Cli = Cli::parse();
-    grrs(&args)
-}
-
-fn grrs(args: &Cli) -> Result<()> {
+    
     let f: File = File::open(&args.path)
         .with_context(|| format!("could not read file `{}`", args.path.display()))?;
-    let reader: BufReader<File> = BufReader::new(f);
+    let content: BufReader<File> = BufReader::new(f);
 
-    for line in reader.lines() {
-        let line: String = line
-            .with_context(|| "could not read line")?;
-        if line.contains(&args.pattern) {
-            println!("{}", line);
-        }
-    }
+    let writer = BufWriter::new(std::io::stdout());
 
-    Ok(())
+    grrs::find_matches(content, &args.pattern, writer)
 }
