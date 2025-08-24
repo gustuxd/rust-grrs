@@ -3,7 +3,6 @@
 List of things to improve this repository.
 
 ### Backlog
-- [] Write tests
 - [] Add regex matching as a possible pattern
 - [] Research better performance implementations
 
@@ -11,4 +10,5 @@ List of things to improve this repository.
 - [] Add read from `stdin` instead of a file
 
 ### Done
+- [x] Write tests
 - [x] Initial grrs implementation
