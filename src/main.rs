@@ -7,50 +7,17 @@ struct Cli {
     path: PathBuf,
 }
 
-fn main() {
-    // Before clap: manually reading std::env::args and mapping into Cli struct
-    /*
-    let pattern = std::env::args().nth(1).expect("no pattern given");
-    let path = std::env::args().nth(2).expect("no pattern given");
-
-    let args = Cli {
-        pattern,
-        path: PathBuf::from(path),
-    };
-    */
-
-    // After clap: automatically maps cli args into Cli struct and provides a --help
-    let args = Cli::parse();
-    grrs(&args);
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let args: Cli = Cli::parse();
+    grrs(&args)
 }
 
-fn grrs(args: &Cli) {
-    // Current best implementation
-    //let _ = grrs_std(&args);
-    let _ = grrs_buffered(&args);
-}
+fn grrs(args: &Cli) -> Result<(), Box<dyn std::error::Error>> {
+    let f: File = File::open(&args.path)?;
+    let reader: BufReader<File> = BufReader::new(f);
 
-#[allow(dead_code)]
-fn grrs_std(args: &Cli) -> Result<(), std::io::Error> {
-    let content = std::fs::read_to_string(&args.path).expect("could not read file");
-
-    for line in content.lines() {
-        if line.contains(&args.pattern) {
-            println!("{}", line);
-        }
-    }
-
-    Ok(())
-}
-
-#[allow(dead_code)]
-fn grrs_buffered(args: &Cli) -> Result<(), std::io::Error> {
-    let f = File::open(&args.path)?;
-    let reader = BufReader::new(f);
-
-    // println!("{}", reader.lines().nth(1).unwrap().unwrap());
     for line in reader.lines() {
-        let line = line?;
+        let line: String = line?;
         if line.contains(&args.pattern) {
             println!("{}", line);
         }
