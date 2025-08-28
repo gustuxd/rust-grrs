@@ -7,8 +7,9 @@ List of things to improve this repository.
 - [] Research better performance implementations
 
 ### In progress
-- [] Add read from `stdin` instead of a file
+- [] Highlight match on output
 
 ### Done
 - [x] Write tests
 - [x] Initial grrs implementation
+- [x] Add read from `stdin` instead of a file

@@ -5,6 +5,7 @@ pub fn find_matches(content: impl std::io::BufRead, pattern: &str, mut writer: i
         let line: String = line.with_context(|| "could not read line")?;
         if line.contains(pattern) {
             writeln!(writer, "{}", line).with_context(|| "could not write to writer")?;
+            writer.flush()?;
         }
     }
 
